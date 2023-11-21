@@ -41,7 +41,7 @@ class User:
     def account(self):
         self.account.deposit(100)
         print(self.account.balance)
-    
+
 
 @app.route('/')
 def index():
@@ -50,9 +50,38 @@ def index():
     user1.make_withdrawal(200)
     user1.yield_interest()
     user1_account_info = user1.account_info()
-
+    # if request.method == 'POST':
+    #     if 'deposit' in request.form:
+    #         deposit_amount = float(request.form['deposit'])
+    #         user1.make_deposit(deposit_amount)
+    #         user1_account_info = user1.account_info()
+    #     elif 'withdraw' in request.form:
+    #         withdraw_amount = float(request.form['withdraw'])
+    #         user1.make_withdrawal(withdraw_amount)
+    #         user1_account_info = user1.account_info()
     return render_template('index.html', account_info=user1_account_info)
 
+@app.route('/deposit', methods=['GET', 'POST'])
+def deposit():
+    return render_template('deposit.html')
+
+@app.route('/withdraw', methods=['GET', 'POST'])
+def withdraw():
+    return render_template('withdraw.html')
+
+@app.route('/process_deposit', methods=['POST'])
+def process_deposit():
+    user1 = User("Bruce Wayne", "brucewayne@roadrunner.com")
+    deposit_amount = float(request.form['deposit'])
+    user1.make_deposit(deposit_amount)
+    return redirect('index.html')
+
+@app.route('/process_withdrawal', methods=['POST'])
+def process_withdrawal():
+    user1 = User("Bruce Wayne", "brucewayne@roadrunner.com")
+    withdraw_amount = float(request.form['withdraw'])
+    user1.make_withdrawal(withdraw_amount)
+    return redirect('index.html')
 
 if __name__=='__main__':
     app.run(debug=True)
